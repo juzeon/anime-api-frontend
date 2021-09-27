@@ -8,6 +8,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import {appAxios} from "@/plugins/axios"
 import {ISwal, swal} from "@/plugins/swal"
 import {AxiosInstance} from "axios"
+import VueMeta from 'vue-meta'
 
 Vue.config.productionTip = false
 
@@ -17,6 +18,14 @@ declare module 'vue/types/vue' {
         $swal: ISwal
     }
 }
+declare let process: {
+    env: {
+        NODE_ENV: string
+    }
+}
+
+Vue.use(VueMeta)
+
 Vue.prototype.$axios = appAxios
 Vue.prototype.$swal = swal
 

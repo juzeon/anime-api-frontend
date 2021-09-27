@@ -4,9 +4,7 @@
       <div class="d-flex align-center" style="cursor: pointer" @click="$router.push({name:'Index'})">
         <v-img
             class="shrink mr-2"
-            contain
             src="https://anime-api.readthedocs.io/zh_CN/latest/_static/logo.ico"
-            transition="scale-transition"
             width="40"
         />
         <span class="text-h6 ml-2">Anime</span>
@@ -17,7 +15,7 @@
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <keep-alive><router-view/></keep-alive>
     </v-main>
   </v-app>
 </template>
@@ -27,6 +25,9 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'App',
+  metaInfo: {
+    titleTemplate: '%s | Anime'
+  },
   data() {
     return {}
   },
