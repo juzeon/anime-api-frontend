@@ -1,28 +1,39 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-app-bar app>
+      <div class="d-flex align-center" style="cursor: pointer" @click="$router.push({name:'Index'})">
+        <v-img
+            class="shrink mr-2"
+            contain
+            src="https://anime-api.readthedocs.io/zh_CN/latest/_static/logo.ico"
+            transition="scale-transition"
+            width="40"
+        />
+        <span class="text-h6 ml-2">Anime</span>
+      </div>
+
+      <v-spacer></v-spacer>
+
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script lang="ts">
+import Vue from 'vue'
 
-export default {
+export default Vue.extend({
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {}
+  },
+  mounted() {
+    if (!this.$store.state.baseUrl.length) {
+      this.$router.push({name: 'Settings'})
+    }
   }
-}
+})
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
