@@ -5,27 +5,29 @@
       &nbsp;
       {{ '（' + ((this.watchInfo) ? this.watchInfo.format : '加载中') + '）' }}
     </p>
-    <v-row v-show="this.watchInfo">
-      <v-col cols="10" offset="1">
-        <NPlayer :set="setPlayer" :options="playerDefaultOptions"></NPlayer>
-      </v-col>
-    </v-row>
-    <v-card class="mt-5">
-      <p class="text-h6 ml-3 mt-3">添加弹幕</p>
-      <search-bar class="mx-3" v-model="danmakuSearchInput" @search="getDanmakuSourceList"></search-bar>
-      <v-list-item v-for="(danmakuSource,index) in danmakuSourceList" :key="'danmakuSource-'+index" two-line>
-        <v-list-item-content>
-          <v-list-item-title>{{ danmakuSource.title }}</v-list-item-title>
-          <v-list-item-subtitle>
-            {{ $helper.translateDanmakuEngine(danmakuSource.module) }}（含{{ danmakuSource.num }}集）
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-          <danmaku-insert-btn :title="danmakuSource.title" :url="danmakuSource.url"
-                              @insertDanmaku="insertDanmaku"></danmaku-insert-btn>
-        </v-list-item-action>
-      </v-list-item>
-    </v-card>
+    <div v-show="this.watchInfo">
+      <v-row>
+        <v-col cols="10" offset="1">
+          <NPlayer :set="setPlayer" :options="playerDefaultOptions"></NPlayer>
+        </v-col>
+      </v-row>
+      <v-card class="mt-5">
+        <p class="text-h6 ml-3 mt-3">添加弹幕</p>
+        <search-bar class="mx-3" v-model="danmakuSearchInput" @search="getDanmakuSourceList"></search-bar>
+        <v-list-item v-for="(danmakuSource,index) in danmakuSourceList" :key="'danmakuSource-'+index" two-line>
+          <v-list-item-content>
+            <v-list-item-title>{{ danmakuSource.title }}</v-list-item-title>
+            <v-list-item-subtitle>
+              {{ $helper.translateDanmakuEngine(danmakuSource.module) }}（含{{ danmakuSource.num }}集）
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-list-item-action>
+            <danmaku-insert-btn :title="danmakuSource.title" :url="danmakuSource.url"
+                                @insertDanmaku="insertDanmaku"></danmaku-insert-btn>
+          </v-list-item-action>
+        </v-list-item>
+      </v-card>
+    </div>
     <v-sheet class="py-16"></v-sheet>
   </focus-area>
 </template>

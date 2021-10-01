@@ -9,11 +9,9 @@
         />
         <span class="text-h6 ml-2">Anime</span>
       </div>
-
       <v-spacer></v-spacer>
-
+      <v-btn icon @click="navigateToSettings"><v-icon>mdi-cog</v-icon></v-btn>
     </v-app-bar>
-
     <v-main>
       <keep-alive>
         <router-view/>
@@ -35,12 +33,17 @@ export default Vue.extend({
   },
   mounted() {
     if (!this.$store.state.baseUrl.length) {
-      this.$router.push({name: 'Settings'})
+      this.navigateToSettings()
       return
     }
     this.$axios.get('system/modules').then(res => {
       this.$store.commit('setEngineModule', res.data)
     })
+  },
+  methods:{
+    navigateToSettings(){
+      this.$router.push({name: 'Settings'})
+    }
   }
 })
 </script>

@@ -16,6 +16,9 @@ import * as vuex from 'vuex'
 
 export default Vue.extend({
   name: "Settings",
+  metaInfo: {
+    title: '设定'
+  },
   data() {
     return {
       inputValid: false,
