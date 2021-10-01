@@ -16,7 +16,7 @@
 - 使用 [NPlayer](https://nplayer.js.org/) 代替 [DPlayer](https://github.com/DIYgod/DPlayer)；
 - 支持更丰富的弹幕设置：按类型屏蔽、不透明度、显示区域、弹幕速度、字体大小等，并且可以保存弹幕设定；
 - 支持按正则表达式屏蔽弹幕；
-- 对 iOS 支持更友好；
+- 对 iOS 支持更友好，并支持作为 Web App 添加到主屏幕；
 
 ## Demo
 
