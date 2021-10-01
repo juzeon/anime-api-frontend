@@ -9,7 +9,8 @@ export default new Vuex.Store({
     state: {
         baseUrl: userConfig.baseUrl,
         searchText: '',
-        engineModule: undefined as undefined | IEngineModule
+        engineModule: undefined as undefined | IEngineModule,
+        forbidDanmakuList: userConfig.forbidDanmakuList as RegExp[]
     },
     mutations: {
         setBaseUrl(state, value: string) {
@@ -21,6 +22,10 @@ export default new Vuex.Store({
         },
         setEngineModule(state, value: IEngineModule) {
             state.engineModule = value
+        },
+        setForbidDanmakuList(state, value: RegExp[]) {
+            userConfig.forbidDanmakuList = value
+            state.forbidDanmakuList = value
         }
     },
     actions: {},

@@ -28,6 +28,10 @@
           </v-list-item-action>
         </v-list-item>
       </v-card>
+      <v-card class="mt-5">
+        <p class="text-h6 ml-3 mt-3">屏蔽弹幕</p>
+        <forbid-danmaku-card @modify="resetDanmaku"></forbid-danmaku-card>
+      </v-card>
     </div>
     <v-sheet class="py-16"></v-sheet>
   </focus-area>
@@ -36,19 +40,21 @@
 <script lang="ts">
 import Vue from "vue"
 import FocusArea from "../components/FocusArea.vue"
-import {IAnimeDetail, IDanmakuEpisode, IDanmakuSource, IWatchInfo} from "@/types"
+import {IAnimeDetail, IDanmakuSource, IWatchInfo} from "@/types"
 import {MetaInfo} from "vue-meta"
-import {Player, PlayerOptions, EVENT} from "nplayer"
+import {EVENT, Player, PlayerOptions} from "nplayer"
 import Hls from "hls.js"
 import Danmaku from '@nplayer/danmaku'
 import {BulletOption} from "@nplayer/danmaku/dist/src/ts/danmaku/bullet"
 import SearchBar from "@/components/SearchBar.vue"
 import DanmakuInsertBtn from "@/components/DanmakuInsertBtn.vue"
 import axios from "axios"
+import ForbidDanmakuCard from "@/components/ForbidDanmakuCard.vue"
+import * as vuex from 'vuex'
 
 export default Vue.extend({
   name: "Watch",
-  components: {DanmakuInsertBtn, SearchBar, FocusArea},
+  components: {ForbidDanmakuCard, DanmakuInsertBtn, SearchBar, FocusArea},
   props: ['token', 'playlist', 'episode'],
   metaInfo(): MetaInfo {
     return {
@@ -58,7 +64,8 @@ export default Vue.extend({
   computed: {
     routerProps(): string {
       return this.token + '-' + this.playlist + '-' + this.episode
-    }
+    },
+    ...vuex.mapState(['forbidDanmakuList'])
   },
   data() {
     return {
@@ -77,7 +84,8 @@ export default Vue.extend({
         ]
       } as PlayerOptions,
       danmakuSourceList: [] as IDanmakuSource[],
-      danmakuList: [] as BulletOption[],
+      danmakuListUnfiltered: [] as BulletOption[],
+      danmakuListFiltered: [] as BulletOption[],
       danmakuSearchInput: '',
       useProxy: false,
       historyTimeLogger: undefined as number | undefined,
@@ -137,8 +145,8 @@ export default Vue.extend({
             this.player?.seek(parseInt(historyTime))
           }
           this.historyTimeLogger = setInterval(() => {
-            console.log('set time: ' + this.player?.currentTime)
-            localStorage.setItem(historyTimeKey, this.player?.currentTime)
+            // console.log('set time: ' + this.player?.currentTime)
+            localStorage.setItem(historyTimeKey, this.player!.currentTime + '')
           }, 1000)
           this.firstPlay = false
         })
@@ -156,9 +164,20 @@ export default Vue.extend({
       })
     },
     insertDanmaku(danmakuList: BulletOption[]) {
-      let oldDanmakuList = this.player!.danmaku.getItems()
-      let newDanmakuList = [...oldDanmakuList, ...danmakuList].sort((a, b) => a.time - b.time)
-      this.player?.danmaku.resetItems(newDanmakuList)
+      this.danmakuListUnfiltered = [...this.danmakuListUnfiltered, ...danmakuList].sort((a, b) => a.time - b.time)
+      this.resetDanmaku()
+    },
+    resetDanmaku() {
+      let danmakuList = this.danmakuListUnfiltered.filter(value => {
+        for (let regexp of this.forbidDanmakuList) {
+          if (regexp.test(value.text)) {
+            return false
+          }
+        }
+        return true
+      })
+      this.danmakuListFiltered = danmakuList
+      this.player?.danmaku.resetItems(danmakuList)
     }
   }
 })

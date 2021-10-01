@@ -27,6 +27,8 @@
           </v-list-item>
         </div>
         <v-btn block :disabled="!inputValid" @click="applySettings" :loading="btnLoading">更新</v-btn>
+        <p class="text-h6 mt-3">屏蔽弹幕</p>
+        <forbid-danmaku-card></forbid-danmaku-card>
       </div>
     </v-row>
   </v-card>
@@ -36,9 +38,11 @@
 import Vue from 'vue'
 import {IEngineModule} from "@/types"
 import * as vuex from 'vuex'
+import ForbidDanmakuCard from "@/components/ForbidDanmakuCard.vue"
 
 export default Vue.extend({
   name: "Settings",
+  components: {ForbidDanmakuCard},
   metaInfo: {
     title: '设定'
   },
