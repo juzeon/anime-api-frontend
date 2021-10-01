@@ -16,7 +16,7 @@
         <p class="text-h6 ml-3 mt-3">选集</p>
         <play-list :name="playList.name" :video-list="playList.video_list"></play-list>
       </v-card>
-      <v-card class="mt-5">
+      <v-card class="mt-5" :loading="danmakuLoading">
         <p class="text-h6 ml-3 mt-3">添加弹幕</p>
         <search-bar class="mx-3" v-model="danmakuSearchInput" @search="getDanmakuSourceList"></search-bar>
         <v-list-item v-for="(danmakuSource,index) in danmakuSourceList" :key="'danmakuSource-'+index" two-line>
@@ -99,6 +99,7 @@ export default Vue.extend({
       danmakuListUnfiltered: [] as BulletOption[],
       danmakuListFiltered: [] as BulletOption[],
       danmakuSearchInput: '',
+      danmakuLoading: false,
       useProxy: false,
       historyTimeLogger: undefined as number | undefined,
       firstPlay: true
@@ -174,8 +175,10 @@ export default Vue.extend({
       })
     },
     getDanmakuSourceList() {
+      this.danmakuLoading = true
       this.$axios.get('danmaku/search/' + encodeURI(this.danmakuSearchInput)).then(res => {
         this.danmakuSourceList = res.data
+        this.danmakuLoading = false
       })
     },
     insertDanmaku(danmakuList: BulletOption[]) {
