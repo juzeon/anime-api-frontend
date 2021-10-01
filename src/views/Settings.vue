@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-16 pa-6 mt-3">
+  <focus-area>
     <p class="text-h3">设定</p>
     <v-row class="d-flex align-center justify-center my-3">
       <div style="width: 60%">
@@ -31,7 +31,7 @@
         <forbid-danmaku-card></forbid-danmaku-card>
       </div>
     </v-row>
-  </v-card>
+  </focus-area>
 </template>
 
 <script lang="ts">
@@ -39,10 +39,11 @@ import Vue from 'vue'
 import {IEngineModule} from "@/types"
 import * as vuex from 'vuex'
 import ForbidDanmakuCard from "@/components/ForbidDanmakuCard.vue"
+import FocusArea from "@/components/FocusArea.vue"
 
 export default Vue.extend({
   name: "Settings",
-  components: {ForbidDanmakuCard},
+  components: {FocusArea, ForbidDanmakuCard},
   metaInfo: {
     title: '设定'
   },
