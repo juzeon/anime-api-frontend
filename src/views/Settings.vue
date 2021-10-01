@@ -71,26 +71,30 @@ export default Vue.extend({
     applySettings() {
       this.btnLoading = true
       this.$store.commit('setBaseUrl', this.baseUrl)
-      let types = ['anime', 'danmaku']
+      let promises = [] as Promise[]
+      if (this.engineModule) {
+        let types = ['anime', 'danmaku']
 
-      interface IModulePayload {
-        module: string,
-        enable: boolean
-      }
+        interface IModulePayload {
+          module: string,
+          enable: boolean
+        }
 
-      let payload = [] as IModulePayload[]
-      for (let type of types) {
-        for (let [index, module] of this.engineModuleInput![type as keyof IEngineModule].entries()) {
-          if (module.enable !== this.engineModule[type][index].enable) {
-            payload.push({
-              module: module.module,
-              enable: module.enable
-            })
+        let payload = [] as IModulePayload[]
+        for (let type of types) {
+          for (let [index, module] of this.engineModuleInput![type as keyof IEngineModule].entries()) {
+            if (module.enable !== this.engineModule[type][index].enable) {
+              payload.push({
+                module: module.module,
+                enable: module.enable
+              })
+            }
           }
         }
+        promises.push(this.$axios.post('system/modules', payload))
       }
 
-      this.$axios.post('system/modules', payload).then(res => {
+      Promise.all(promises).then(() => {
         return this.$swal.success('设定已更新')
       }).then(() => {
         window.location.reload()
