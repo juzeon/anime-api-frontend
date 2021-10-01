@@ -15,7 +15,9 @@
     </v-app-bar>
 
     <v-main>
-      <keep-alive><router-view/></keep-alive>
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
     </v-main>
   </v-app>
 </template>
@@ -34,7 +36,11 @@ export default Vue.extend({
   mounted() {
     if (!this.$store.state.baseUrl.length) {
       this.$router.push({name: 'Settings'})
+      return
     }
+    this.$axios.get('system/modules').then(res => {
+      this.$store.commit('setEngineModule', res.data)
+    })
   }
 })
 </script>

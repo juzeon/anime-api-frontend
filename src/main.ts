@@ -9,13 +9,15 @@ import {appAxios} from "@/plugins/axios"
 import {ISwal, swal} from "@/plugins/swal"
 import {AxiosInstance} from "axios"
 import VueMeta from 'vue-meta'
+import {Helper} from "@/plugins/helper"
 
 Vue.config.productionTip = false
 
 declare module 'vue/types/vue' {
     interface Vue {
         $axios: AxiosInstance,
-        $swal: ISwal
+        $swal: ISwal,
+        $helper: Helper
     }
 }
 declare let process: {
@@ -28,6 +30,7 @@ Vue.use(VueMeta)
 
 Vue.prototype.$axios = appAxios
 Vue.prototype.$swal = swal
+Vue.prototype.$helper = new Helper()
 
 new Vue({
     store,

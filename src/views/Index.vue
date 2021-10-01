@@ -9,7 +9,7 @@
           <p class="text-h4">Anime</p>
         </v-col>
         <v-col cols="10" offset="1" class="mt-6">
-          <search-bar v-model="inputText" @search="navigateToSearch"></search-bar>
+          <search-bar v-model="searchText" @search="navigateToSearch"></search-bar>
         </v-col>
       </v-row>
     </v-card>
@@ -19,6 +19,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import SearchBar from "@/components/SearchBar.vue"
+import * as vuex from 'vuex'
 
 export default Vue.extend({
   name: 'Index',
@@ -26,14 +27,22 @@ export default Vue.extend({
   metaInfo: {
     title: '主页'
   },
-  data() {
-    return {
-      inputText: ''
+  computed: {
+    searchText: {
+      set(value: string) {
+        this.$store.commit('setSearchText', value)
+      },
+      get() {
+        return this.$store.state.searchText
+      }
     }
+  },
+  data() {
+    return {}
   },
   methods: {
     navigateToSearch() {
-      this.$router.push({name: 'Search', params: {searchTextPassed: this.inputText}})
+      this.$router.push({name: 'Search', params: {searchTextPassed: this.searchText}})
     }
   }
 })
