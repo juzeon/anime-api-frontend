@@ -10,6 +10,7 @@ import {ISwal, swal} from "@/plugins/swal"
 import {AxiosInstance} from "axios"
 import VueMeta from 'vue-meta'
 import {Helper} from "@/plugins/helper"
+import NPlayer from "@nplayer/vue"
 
 Vue.config.productionTip = false
 
@@ -27,6 +28,7 @@ declare let process: {
 }
 
 Vue.use(VueMeta)
+Vue.use(NPlayer)
 
 Vue.prototype.$axios = appAxios
 Vue.prototype.$swal = swal

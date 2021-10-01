@@ -1,5 +1,6 @@
 import {userConfig} from "@/plugins/config"
 import store from '../store/index'
+import {IVideoExploded} from "@/types"
 
 export class Helper {
     getWebsocketBaseUrl(): string {
@@ -11,6 +12,23 @@ export class Helper {
     }
 
     translateAnimeEngine(module: string) {
-        return store.state.engineModule!.anime.find(value => value.module === module)?.name || module
+        return store.state.engineModule?.anime.find(value => value.module === module)?.name || module
+    }
+
+    translateDanmakuEngine(module: string) {
+        return store.state.engineModule?.danmaku.find(value => value.module === module)?.name || module
+    }
+
+    getAnimeTokenFromUrl(url: string) {
+        return /\/anime\/(.*)/.exec(url)![1]
+    }
+
+    getVideoExplodedFromUrl(url: string) {
+        let arr = /\/anime\/(.*?)\/(\d+?)\/(\d+)/.exec(url)!
+        return <IVideoExploded>{
+            token: arr[1],
+            playlist: parseInt(arr[2]),
+            episode: parseInt(arr[3])
+        }
     }
 }

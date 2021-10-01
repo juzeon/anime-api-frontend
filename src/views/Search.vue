@@ -1,5 +1,5 @@
 <template>
-  <focus-area class="mt-4">
+  <focus-area>
     <v-card>
       <v-row>
         <v-col cols="12">
@@ -12,7 +12,8 @@
           <anime-item class="ma-4" v-for="(item,index) in animeArr" :key="'animeArr-'+index"
                       :cover="item.cover_url" :category="item.category"
                       :description="item.description" :engine="item.engine"
-                      :title="item.title" :url="item.url" :score="item.score"></anime-item>
+                      :title="item.title" :url="item.url" :score="item.score"
+                      @click.native="navigateToAnime(item.url)"></anime-item>
         </v-col>
       </v-row>
     </v-card>
@@ -63,6 +64,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    navigateToAnime(url: string) {
+      this.$router.push({name: 'Anime', params: {token: this.$helper.getAnimeTokenFromUrl(url)}})
+    },
     applySearchText() {
       this.$store.commit('setSearchText', this.inputText)
       this.startSearch()
