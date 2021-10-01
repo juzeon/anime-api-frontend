@@ -44,7 +44,7 @@
 <script lang="ts">
 import Vue from "vue"
 import FocusArea from "../components/FocusArea.vue"
-import {IAnimeDetail, IDanmakuSource, IWatchInfo} from "@/types"
+import {IAnimeDetail, IDanmakuSource, IPlayListOfAnimeDetail, IWatchInfo} from "@/types"
 import {MetaInfo} from "vue-meta"
 import {EVENT, Player, PlayerOptions} from "nplayer"
 import Hls from "hls.js"
@@ -70,11 +70,11 @@ export default Vue.extend({
     routerProps(): string {
       return this.token + '-' + this.playlist + '-' + this.episode
     },
-    playList() {
+    playList(): IPlayListOfAnimeDetail | null {
       if (!this.animeDetail) {
         return null
       }
-      return this.animeDetail.play_lists[this.playlist]
+      return this.animeDetail.play_lists[parseInt(this.playlist)]
     },
     ...vuex.mapState(['forbidDanmakuList', 'customDanmakuOptions'])
   },
@@ -91,7 +91,7 @@ export default Vue.extend({
         plugins: [
           new Danmaku({
             autoInsert: false,
-            ...this.customDanmakuOptions
+            ...this.$store.state.customDanmakuOptions
           })
         ]
       } as PlayerOptions,
