@@ -12,6 +12,10 @@
           <NPlayer :set="setPlayer" :options="playerDefaultOptions"></NPlayer>
         </v-col>
       </v-row>
+      <v-card class="mt-5 pa-4" v-if="playList">
+        <p class="text-h6 ml-3 mt-3">选集</p>
+        <play-list :name="playList.name" :video-list="playList.video_list"></play-list>
+      </v-card>
       <v-card class="mt-5">
         <p class="text-h6 ml-3 mt-3">添加弹幕</p>
         <search-bar class="mx-3" v-model="danmakuSearchInput" @search="getDanmakuSourceList"></search-bar>
@@ -51,10 +55,11 @@ import DanmakuInsertBtn from "@/components/DanmakuInsertBtn.vue"
 import axios from "axios"
 import ForbidDanmakuCard from "@/components/ForbidDanmakuCard.vue"
 import * as vuex from 'vuex'
+import PlayList from "@/components/PlayList.vue"
 
 export default Vue.extend({
   name: "Watch",
-  components: {ForbidDanmakuCard, DanmakuInsertBtn, SearchBar, FocusArea},
+  components: {PlayList, ForbidDanmakuCard, DanmakuInsertBtn, SearchBar, FocusArea},
   props: ['token', 'playlist', 'episode'],
   metaInfo(): MetaInfo {
     return {
@@ -64,6 +69,12 @@ export default Vue.extend({
   computed: {
     routerProps(): string {
       return this.token + '-' + this.playlist + '-' + this.episode
+    },
+    playList(){
+      if(!this.animeDetail){
+        return null
+      }
+      return this.animeDetail.play_lists[this.playlist]
     },
     ...vuex.mapState(['forbidDanmakuList'])
   },

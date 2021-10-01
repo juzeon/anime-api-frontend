@@ -7,10 +7,7 @@
                   :title="animeDetail.title" :disable-hover="true"></anime-item>
       <v-divider></v-divider>
       <v-card class="mt-5" elevation="0" v-for="(playList,index) in animeDetail.play_lists" :key="'playlist-'+index">
-        <p class="text-h6">{{ playList.name }}</p>
-        <v-chip class="ml-2 mt-2" color="green" outlined v-for="(videoList,jndex) in playList.video_list"
-                :key="'videolist-'+index+'-'+jndex" @click="navigateToWatch(videoList)">{{ videoList.name }}
-        </v-chip>
+        <play-list :name="playList.name" :video-list="playList.video_list"></play-list>
       </v-card>
     </div>
   </focus-area>
@@ -22,10 +19,11 @@ import FocusArea from "@/components/FocusArea.vue"
 import {IAnimeDetail, IVideoListOfAnimeDetail} from "@/types"
 import AnimeItem from "@/components/AnimeItem.vue"
 import {MetaInfo} from "vue-meta"
+import PlayList from "@/components/PlayList.vue"
 
 export default Vue.extend({
   name: "Anime",
-  components: {AnimeItem, FocusArea},
+  components: {PlayList, AnimeItem, FocusArea},
   props: ['token'],
   metaInfo(): MetaInfo {
     return {
@@ -46,13 +44,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    navigateToWatch(videoList: IVideoListOfAnimeDetail) {
-      let videoExploded = this.$helper.getVideoExplodedFromUrl(videoList.info)
-      this.$router.push({
-        name: 'Watch',
-        params: {token: videoExploded.token, playlist: videoExploded.playlist + '', episode: videoExploded.episode + ''}
-      })
-    },
     getAnimeDetail() {
       this.animeDetail = undefined
       this.$axios.get("anime/" + this.token).then(res => {
