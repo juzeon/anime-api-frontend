@@ -71,7 +71,7 @@ export default Vue.extend({
     applySettings() {
       this.btnLoading = true
       this.$store.commit('setBaseUrl', this.baseUrl)
-      let promises = [] as Promise[]
+      let promises = [] as Promise<any>[]
       if (this.engineModule) {
         let types = ['anime', 'danmaku']
 
