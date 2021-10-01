@@ -74,8 +74,21 @@ export interface IDanmakuSource {
     title: string;
     url: string;
 }
+
 export interface IDanmakuEpisode {
     data: string;
     name: string;
-    url:  string;
+    url: string;
+}
+
+export interface ICustomDanmakuOptions {
+    disable: boolean,
+    blocked: Array<'scroll' | 'top' | 'bottom' | 'color'>,
+    fontsize: number,
+    fontsizeScale: number,
+    opacity: number,
+    speed: number,
+    area: 0.25 | 0.5 | 0.75 | 1,
+    unlimited: boolean,
+    bottomUp: boolean,
 }

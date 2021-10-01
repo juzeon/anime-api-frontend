@@ -70,13 +70,13 @@ export default Vue.extend({
     routerProps(): string {
       return this.token + '-' + this.playlist + '-' + this.episode
     },
-    playList(){
-      if(!this.animeDetail){
+    playList() {
+      if (!this.animeDetail) {
         return null
       }
       return this.animeDetail.play_lists[this.playlist]
     },
-    ...vuex.mapState(['forbidDanmakuList'])
+    ...vuex.mapState(['forbidDanmakuList', 'customDanmakuOptions'])
   },
   data() {
     return {
@@ -91,6 +91,7 @@ export default Vue.extend({
         plugins: [
           new Danmaku({
             autoInsert: false,
+            ...this.customDanmakuOptions
           })
         ]
       } as PlayerOptions,
@@ -144,6 +145,9 @@ export default Vue.extend({
         this.watchInfo = res.data
         this.player?.on(EVENT.ERROR, () => {
           this.loadVideo()
+        })
+        this.player?.on(this.player?.danmaku.EVENT.DANMAKU_UPDATE_OPTIONS, () => {
+          this.$store.commit('setCustomDanmakuOptions', this.player?.danmaku.opts)
         })
         this.player?.on(EVENT.PLAY, () => {
           if (!this.firstPlay) {

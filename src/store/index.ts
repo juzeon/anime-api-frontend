@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {userConfig} from "@/plugins/config"
-import {IEngineModule} from "@/types"
+import {ICustomDanmakuOptions, IEngineModule} from "@/types"
 
 Vue.use(Vuex)
 
@@ -10,7 +10,8 @@ export default new Vuex.Store({
         baseUrl: userConfig.baseUrl,
         searchText: '',
         engineModule: undefined as undefined | IEngineModule,
-        forbidDanmakuList: userConfig.forbidDanmakuList as RegExp[]
+        forbidDanmakuList: userConfig.forbidDanmakuList as RegExp[],
+        customDanmakuOptions: userConfig.customDanmakuOptions
     },
     mutations: {
         setBaseUrl(state, value: string) {
@@ -26,6 +27,10 @@ export default new Vuex.Store({
         setForbidDanmakuList(state, value: RegExp[]) {
             userConfig.forbidDanmakuList = value
             state.forbidDanmakuList = value
+        },
+        setCustomDanmakuOptions(state, value: ICustomDanmakuOptions) {
+            userConfig.customDanmakuOptions = value
+            state.customDanmakuOptions = value
         }
     },
     actions: {},
