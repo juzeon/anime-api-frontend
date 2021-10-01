@@ -57,17 +57,22 @@ export default Vue.extend({
     },
     insertDanmaku(danmakuEpisode: IDanmakuEpisode) {
       this.loading = true
+
+      interface IPosMap {
+        [key: number]: string
+      }
+
       let posMap = {
         0: 'scroll',
         1: 'top',
         2: 'bottom'
-      }
+      } as IPosMap
       this.$axios.get(danmakuEpisode.data).then(res => {
         let arr = res.data.data
         let bulletsArr = [] as BulletOption[]
         for (let single of arr) {
           let time = single[0]
-          let type = posMap[single[1]]
+          let type = posMap[single[1]] as "scroll" | "top" | "bottom"
           let color = '#' + single[2].toString(16)
           let text = single[4]
           bulletsArr.push({

@@ -99,7 +99,7 @@ export default Vue.extend({
       this.watchInfo = undefined
       this.$axios.get("anime/" + this.token).then(res => {
         this.animeDetail = res.data
-        this.danmakuSearchInput = this.animeDetail?.title
+        this.danmakuSearchInput = this.animeDetail!.title
         this.getDanmakuSourceList()
       })
       this.$axios.get('anime/' + this.token + '/' + this.playlist + '/' + this.episode).then(res => {
@@ -107,12 +107,12 @@ export default Vue.extend({
         console.log('video type: ' + this.watchInfo?.format)
         if (this.watchInfo?.format === 'hls') {
           let hls = new Hls()
-          hls.attachMedia(this.player.video)
+          hls.attachMedia(this.player!.video)
           hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-            hls.loadSource(this.watchInfo?.proxy_url)
+            hls.loadSource(this.watchInfo!.proxy_url)
           })
         } else {
-          this.player?.updateOptions({src: this.watchInfo?.proxy_url})
+          this.player?.updateOptions({src: this.watchInfo!.proxy_url})
         }
       })
     },

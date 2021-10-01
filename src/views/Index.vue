@@ -3,7 +3,7 @@
     <v-card width="800" height="400" elevation="3" class="d-flex align-center">
       <v-row>
         <v-col cols="12" class="d-flex justify-center">
-          <v-img src="https://anime-api.readthedocs.io/zh_CN/latest/_static/logo.ico" max-width="100"></v-img>
+          <v-img src="https://img14.360buyimg.com/ddimg/jfs/t1/208970/36/2976/2479/6156a3fcEe432683d/f6cf924b25e69f6b.png" max-width="100"></v-img>
         </v-col>
         <v-col cols="12" class="d-flex justify-center">
           <p class="text-h4">Anime</p>
