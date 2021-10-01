@@ -40,7 +40,7 @@ const routes: Array<RouteConfig> = [
 ]
 
 const router = new VueRouter({
-    mode: process.env.NODE_ENV === 'production' ? 'hash' : 'history',
+    mode: 'history',
     routes
 })
 
