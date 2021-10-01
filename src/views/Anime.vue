@@ -1,5 +1,6 @@
 <template>
   <focus-area>
+    <v-progress-linear indeterminate v-show="!animeDetail"></v-progress-linear>
     <div v-if="animeDetail">
       <anime-item :description="animeDetail.description" :category="animeDetail.category"
                   :cover="animeDetail.cover_url" :engine="animeDetail.module"

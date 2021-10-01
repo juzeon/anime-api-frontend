@@ -1,9 +1,9 @@
 <template>
   <focus-area>
-    <v-card>
+    <v-card :loading="loading">
       <v-row>
         <v-col cols="12">
-          <p class="text-h5 ml-3">搜寻「{{ searchText }}」的结果</p>
+          <p class="text-h5 ml-3 mt-3">搜寻「{{ searchText }}」的结果</p>
         </v-col>
         <v-col cols="10" offset="1" class="">
           <search-bar v-model="inputText" @search="applySearchText"></search-bar>
@@ -55,7 +55,8 @@ export default Vue.extend({
     return {
       inputText: '',
       ws: undefined as undefined | WebSocket,
-      animeArr: [] as IAnimeBySearch[]
+      animeArr: [] as IAnimeBySearch[],
+      loading: false
     }
   },
   deactivated() {
@@ -72,6 +73,7 @@ export default Vue.extend({
       this.startSearch()
     },
     startSearch() {
+      this.loading = true
       console.log('start searching by ' + this.searchText)
       this.animeArr = []
       if (this.ws !== undefined) {
@@ -90,6 +92,7 @@ export default Vue.extend({
       this.ws.onclose = () => {
         console.log('websocket close')
         this.ws = undefined
+        this.loading = false
       }
     }
   }

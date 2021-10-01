@@ -1,9 +1,10 @@
 <template>
   <focus-area>
+    <v-progress-linear indeterminate v-show="!animeDetail || !watchInfo"></v-progress-linear>
     <p class="text-h6">
       {{ (this.animeDetail) ? '第' + (parseInt(this.episode) + 1) + '集 - ' + this.animeDetail.title : '观看影片' }}
       &nbsp;
-      {{ '（' + ((this.watchInfo) ? this.watchInfo.format : '加载中') + '）' }}
+      {{ '（' + ((this.watchInfo) ? this.watchInfo.format : '加载中') + (this.useProxy ? ', proxy' : '') + '）' }}
     </p>
     <div v-show="this.watchInfo">
       <v-row>
@@ -37,12 +38,13 @@ import Vue from "vue"
 import FocusArea from "../components/FocusArea.vue"
 import {IAnimeDetail, IDanmakuEpisode, IDanmakuSource, IWatchInfo} from "@/types"
 import {MetaInfo} from "vue-meta"
-import {Player, PlayerOptions} from "nplayer"
+import {Player, PlayerOptions, EVENT} from "nplayer"
 import Hls from "hls.js"
 import Danmaku from '@nplayer/danmaku'
 import {BulletOption} from "@nplayer/danmaku/dist/src/ts/danmaku/bullet"
 import SearchBar from "@/components/SearchBar.vue"
 import DanmakuInsertBtn from "@/components/DanmakuInsertBtn.vue"
+import axios from "axios"
 
 export default Vue.extend({
   name: "Watch",
@@ -76,7 +78,10 @@ export default Vue.extend({
       } as PlayerOptions,
       danmakuSourceList: [] as IDanmakuSource[],
       danmakuList: [] as BulletOption[],
-      danmakuSearchInput: ''
+      danmakuSearchInput: '',
+      useProxy: false,
+      historyTimeLogger: undefined as number | undefined,
+      firstPlay: true
     }
   },
   watch: {
@@ -88,11 +93,25 @@ export default Vue.extend({
     }
   },
   deactivated() {
+    clearInterval(this.historyTimeLogger)
     this.$destroy()
   },
   methods: {
     setPlayer(player: Player) {
       this.player = player
+    },
+    loadVideo() {
+      console.log('load video type: ' + this.watchInfo?.format + ', use proxy: ' + this.useProxy)
+      let videoUrl = this.useProxy ? this.watchInfo!.proxy_url : this.watchInfo!.raw_url
+      if (this.watchInfo?.format === 'hls') {
+        let hls = new Hls()
+        hls.attachMedia(this.player!.video)
+        hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+          hls.loadSource(videoUrl)
+        })
+      } else {
+        this.player?.updateOptions({src: videoUrl})
+      }
     },
     initWatch() {
       this.animeDetail = undefined
@@ -104,16 +123,31 @@ export default Vue.extend({
       })
       this.$axios.get('anime/' + this.token + '/' + this.playlist + '/' + this.episode).then(res => {
         this.watchInfo = res.data
-        console.log('video type: ' + this.watchInfo?.format)
-        if (this.watchInfo?.format === 'hls') {
-          let hls = new Hls()
-          hls.attachMedia(this.player!.video)
-          hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-            hls.loadSource(this.watchInfo!.proxy_url)
-          })
-        } else {
-          this.player?.updateOptions({src: this.watchInfo!.proxy_url})
-        }
+        this.player?.on(EVENT.ERROR, () => {
+          this.loadVideo()
+        })
+        this.player?.on(EVENT.PLAY, () => {
+          if (!this.firstPlay) {
+            return
+          }
+          let historyTimeKey = this.token + '_' + this.episode
+          let historyTime = localStorage.getItem(historyTimeKey)
+          console.log('history time: ' + historyTime)
+          if (historyTime) {
+            this.player?.seek(parseInt(historyTime))
+          }
+          this.historyTimeLogger = setInterval(() => {
+            console.log('set time: ' + this.player?.currentTime)
+            localStorage.setItem(historyTimeKey, this.player?.currentTime)
+          }, 1000)
+          this.firstPlay = false
+        })
+        return axios.head(this.watchInfo!.raw_url)
+      }).then(res => {
+        this.loadVideo()
+      }).catch(err => {
+        this.useProxy = true
+        this.loadVideo()
       })
     },
     getDanmakuSourceList() {
