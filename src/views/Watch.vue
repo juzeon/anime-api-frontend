@@ -113,7 +113,7 @@ export default Vue.extend({
       }
     }
   },
-  deactivated() {
+  deactivated() {// 切换剧集的时候没有清除弹幕
     clearInterval(this.historyTimeLogger)
     this.$destroy()
   },
@@ -137,6 +137,13 @@ export default Vue.extend({
     initWatch() {
       this.animeDetail = undefined
       this.watchInfo = undefined
+      this.danmakuListFiltered = []
+      this.danmakuListUnfiltered = []
+      clearInterval(this.historyTimeLogger)
+      this.firstPlay = true
+      this.player?.danmaku.resetItems([])
+      this.useProxy = false
+
       this.$axios.get("anime/" + this.token).then(res => {
         this.animeDetail = res.data
         this.danmakuSearchInput = this.animeDetail!.title
