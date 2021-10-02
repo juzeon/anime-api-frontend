@@ -113,7 +113,7 @@ export default Vue.extend({
       }
     }
   },
-  deactivated() {// 切换剧集的时候没有清除弹幕
+  deactivated() {
     clearInterval(this.historyTimeLogger)
     this.$destroy()
   },
