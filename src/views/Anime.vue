@@ -1,6 +1,9 @@
 <template>
   <focus-area>
     <v-progress-linear indeterminate v-show="!animeDetail"></v-progress-linear>
+    <v-btn icon class="d-block my-4" @click="navigateBack">
+      <v-icon>mdi-arrow-left-circle-outline</v-icon>
+    </v-btn>
     <div v-if="animeDetail">
       <anime-item :description="animeDetail.description" :category="animeDetail.category"
                   :cover="animeDetail.cover_url" :engine="animeDetail.module"
@@ -44,6 +47,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    navigateBack() {
+      this.$router.go(-1)
+    },
     getAnimeDetail() {
       this.animeDetail = undefined
       this.$axios.get("anime/" + this.token).then(res => {

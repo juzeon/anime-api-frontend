@@ -2,6 +2,9 @@
   <focus-area>
     <v-progress-linear indeterminate v-show="!animeDetail || !watchInfo"></v-progress-linear>
     <p class="text-h6">
+      <v-btn icon @click="navigateToAnime">
+        <v-icon>mdi-arrow-left-circle-outline</v-icon>
+      </v-btn>
       {{ (this.animeDetail) ? '第' + (parseInt(this.episode) + 1) + '集 - ' + this.animeDetail.title : '观看影片' }}
       &nbsp;
       {{ '（' + ((this.watchInfo) ? this.watchInfo.format : '加载中') + (this.useProxy ? ', proxy' : '') + '）' }}
@@ -118,6 +121,9 @@ export default Vue.extend({
     this.$destroy()
   },
   methods: {
+    navigateToAnime() {
+      this.$router.push({name: 'Anime', params: {token: this.token}})
+    },
     setPlayer(player: Player) {
       this.player = player
     },
